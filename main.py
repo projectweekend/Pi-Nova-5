@@ -2,9 +2,6 @@ import time
 
 import sensors
 
-pir_pin = 18
-io.setup(pir_pin, io.IN)
-
 
 if __name__ == "__main__":
     while True:
