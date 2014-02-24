@@ -1,5 +1,4 @@
 import RPi.GPIO as io
-
 from sensors.settings import PIR_PIN
 
 
