@@ -18,8 +18,9 @@ if __name__ == "__main__":
             events.log_motion_event()
 
             current_luminosity = sensors.read_luminosity()
+            print("LUMINOSITY: " + current_luminosity)
             if current_luminosity < LUMINOSITY_THRESHOLD:
                 # TODO: Make call to HUE API to turn on lights
-                pass
-            
+                print("LIGHTS ON!")
+
             time.sleep(DETECTION_TIMEOUT)
