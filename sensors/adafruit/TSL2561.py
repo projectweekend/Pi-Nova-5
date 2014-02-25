@@ -20,7 +20,7 @@ class TSL2561(object):
     def set_gain(self, gain=1):
         """ Set the gain """
         if gain != self.gain:
-            if gain==1:
+            if gain == 1:
                 self.i2c.write8(0x81, 0x02)     # set gain = 1X and timing = 402 mSec
                 if self.debug:
                     print "Setting low gain"
@@ -28,7 +28,7 @@ class TSL2561(object):
                 self.i2c.write8(0x81, 0x12)     # set gain = 16X and timing = 402 mSec
                 if self.debug:
                     print "Setting high gain"
-            self.gain=gain                     # safe gain for calculation
+            self.gain = gain                     # safe gain for calculation
             time.sleep(self.pause)              # pause for integration (self.pause must be bigger than integration time)
 
     def read_word(self, reg):
@@ -51,7 +51,7 @@ class TSL2561(object):
         """Reads IR only diode from the I2C device"""
         return self.read_word(reg)
 
-    def read_lux(self, gain = 0):
+    def read_lux(self, gain=0):
         """Grabs a lux reading either with autoranging (gain=0) or with a specified gain (1, 16)"""
         if gain == 1 or gain == 16:
             self.set_gain(gain) # low/highGain
@@ -67,7 +67,7 @@ class TSL2561(object):
                 ambient = self.read_full()
                 ir = self.read_ir()
 
-        if self.gain==1:
+        if self.gain == 1:
             ambient *= 16    # scale 1x to 16x
             ir *= 16         # scale 1x to 16x
                         
