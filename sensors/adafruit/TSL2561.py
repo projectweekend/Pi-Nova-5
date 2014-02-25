@@ -2,7 +2,7 @@ import time
 
 # Sourced from: https://github.com/seanbechhofer/raspberrypi/blob/master/python/TSL2561.py
 # TODO: Strip out values into constants.
-from sensors.adafruit import Adafruit_I2C
+from sensors.adafruit.Adafruit_I2C import Adafruit_I2C
 
 
 class TSL2561(object):
