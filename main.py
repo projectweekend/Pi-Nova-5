@@ -4,10 +4,10 @@ import sensors
 import events
 import lighting
 
-HUE_SYSTEM_IS_READY = False
+
 DETECTION_TIMEOUT = 60
 LUMINOSITY_THRESHOLD = 10
-MAX_AUTH_ATTEMPTS = 5
+MAX_AUTH_FAILURES = 5
 
 
 if __name__ == "__main__":
@@ -24,33 +24,36 @@ if __name__ == "__main__":
         print("Red LED blink pattern: 01")
 
     except lighting.BridgeConfigurationException:
-        print("Red LED blink pattern: 02")
+        print("Red LED blink pattern: 01")
 
     except lighting.BridgeAPIResponseException:
-        print("Red LED blink pattern: 03")
+        print("Red LED blink pattern: 02")
 
     # we have the bridge...
     else:
+
         # main run loop
         while True:
-            # start authorization...
-            AUTH_ATTEMPTS = 0
+
+            # start authorization process...
+            AUTH_FAILURES = 0
             while not hue_bridge.authorized:
-                AUTH_ATTEMPTS += 1
                 # indicate that link button needs to be pressed
                 if hue_bridge.press_link:
                     print("Blue LED blink pattern: 01")
                     # pause to give user time to press link button
-                    time.sleep(5)
+                    time.sleep(10)
                 # attempt authorization...
                 try:
                     hue_bridge.authorize()
-                    print("Green LED blink pattern: 01")
                 except lighting.BridgeAPIResponseException:
-                    print("Red LED blink pattern: 04")
+                    print("Red LED blink pattern: 03")
+                    AUTH_FAILURES += 1
+                    if AUTH_FAILURES >= MAX_AUTH_FAILURES:
+                        raise lighting.BridgeAuthAttemptsExceeded
                     time.sleep(5)
-                if AUTH_ATTEMPTS >= MAX_AUTH_ATTEMPTS:
-                    raise lighting.BridgeAuthAttemptsExceeded
+                else:
+                    print("Green LED blink pattern: 01")
 
             # bridge is now authorized...
             while hue_bridge.authorized:
