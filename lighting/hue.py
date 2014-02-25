@@ -28,6 +28,7 @@ class Bridge(object):
             self._find_ip_address()
 
         self.username = username
+        self._check_authorization()
 
     # Set the ip_address using HUE API web utility
     def _find_ip_address(self):
@@ -44,7 +45,7 @@ class Bridge(object):
 
         self.ip_address = response_data[0]['internalipaddress']
 
-    def _is_authorized(self):
+    def _check_authorization(self):
 
         if not self.ip_address:
             message = "The 'ip_address' property is empty"
@@ -61,10 +62,10 @@ class Bridge(object):
         unauthorized_error = response_data[0].get('error', '')
 
         if not unauthorized_error:
-            return True
+            self.authorized = True
 
         if unauthorized_error['type'] == 1:
-            return False
+            self.authorized = False
         else:
             error_type = unauthorized_error['type']
             error_desc = unauthorized_error['description']
@@ -73,7 +74,7 @@ class Bridge(object):
 
     def _authorize(self):
 
-        if not self._is_authorized():
+        if not self._check_authorization():
             pass
 
 
