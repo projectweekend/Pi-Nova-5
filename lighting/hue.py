@@ -1,3 +1,4 @@
+import json
 import requests
 from custom_exceptions import *
 
@@ -18,16 +19,17 @@ class Bridge(object):
     ip_address = ""
     username = ""
     authorized = False
+    press_link = False
     lights = {}
 
-    def __init__(self, ip="", username=HUE_AUTHORIZED_USER_CONFIG['username']):
+    def __init__(self, ip=""):
 
         if ip:
             self.ip_address = ip
         else:
             self._find_ip_address()
 
-        self.username = username
+        self.username = HUE_AUTHORIZED_USER_CONFIG['username']
         self._check_authorization()
 
     # Set the ip_address using HUE API web utility
@@ -51,11 +53,11 @@ class Bridge(object):
             message = "The 'ip_address' property is empty"
             raise BridgeConfigurationException(message)
 
-        authorization_check_url = "{0}/api/{1}".format(self.ip_address, self.username)
+        authorization_check_url = "http://{0}/api/{1}".format(self.ip_address, self.username)
         authorization_check_response = requests.get(authorization_check_url)
 
         if authorization_check_response.status_code != 200:
-            message = "The bridge did not respond on route '{0}'".format(authorization_check_url)
+            message = "The bridge did not respond properly on route '{0}'".format(authorization_check_url)
             raise BridgeAPIResponseException(message)
 
         response_data = authorization_check_response.json()
@@ -63,19 +65,42 @@ class Bridge(object):
 
         if not unauthorized_error:
             self.authorized = True
+            return
 
         if unauthorized_error['type'] == 1:
             self.authorized = False
         else:
             error_type = unauthorized_error['type']
             error_desc = unauthorized_error['description']
-            message = "Received an unexpected error response. TYPE: {0}. DESCRIPTION: {1}".format(error_type, error_desc)
+            message = "Received an unexpected error. TYPE: {0}. DESCRIPTION: {1}".format(error_type, error_desc)
             raise BridgeAPIResponseException(message)
 
-    def _authorize(self):
+    def authorize(self):
 
-        if not self._check_authorization():
-            pass
+        if not self.authorized:
+            post_headers = {'content-type': 'application/json'}
+            post_body = json.dumps(HUE_AUTHORIZED_USER_CONFIG)
+            post_url = "http://{0}/api".format(self.ip_address)
 
+            authorization_response = requests.post(url=post_url, data=post_body, headers=post_headers)
 
+            if authorization_response.status_code != 200:
+                message = "The bridge did not respond properly on route: '{0}'".format(post_url)
+                raise BridgeAPIResponseException(message)
 
+            response_data = authorization_response.json()
+            unauthorized_error = response_data[0].get('error', '')
+
+            if not unauthorized_error:
+                self.authorized = True
+                self.press_link = False
+                return
+
+            if unauthorized_error['type'] == 101:
+                self.authorized = False
+                self.press_link = True
+            else:
+                error_type = unauthorized_error['type']
+                error_desc = unauthorized_error['description']
+                message = "Received an unexpected error. TYPE: {0}. DESCRIPTION: {1}".format(error_type, error_desc)
+                raise BridgeAPIResponseException(message)

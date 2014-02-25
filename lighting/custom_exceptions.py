@@ -16,3 +16,7 @@ class BridgeConfigurationException(Exception):
 
 class BridgeAPIResponseException(Exception):
     pass
+
+
+class BridgeAuthAttemptsExceeded(Exception):
+    pass
