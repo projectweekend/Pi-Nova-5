@@ -61,14 +61,15 @@ class Bridge(object):
             raise BridgeAPIResponseException(message)
 
         response_data = authorization_check_response.json()
-        print(response_data)
-        unauthorized_error = response_data[0].get('error', '')
 
-        if not unauthorized_error:
+        # if authorized, the response is a dictionary of light data
+        if isinstance(response_data, dict):
             self.authorized = True
             return
 
-        if unauthorized_error['type'] == 1:
+        # if unauthorized, then response is a list with an error dictionary inside
+        unauthorized_error = response_data[0].get('error', '')
+        if unauthorized_error and unauthorized_error['type'] == 1:
             self.authorized = False
         else:
             error_type = unauthorized_error['type']
