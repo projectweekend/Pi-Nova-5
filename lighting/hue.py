@@ -61,6 +61,7 @@ class Bridge(object):
             raise BridgeAPIResponseException(message)
 
         response_data = authorization_check_response.json()
+        print(response_data)
         unauthorized_error = response_data[0].get('error', '')
 
         if not unauthorized_error:
