@@ -11,7 +11,15 @@ HUE_AUTHORIZED_USER_CONFIG = {
 
 
 class Light(object):
-    pass
+    
+    def __init__(self, bridge_ip, username, light_id):
+        self.id = light_id
+        self.url = "http://{0}/api/{1}/lights/{2}/state".format(bridge_ip, username, light_id)
+
+    def turn_on(self):
+        put_headers = {'content-type': 'application/json'}
+        put_body = json.dumps({'on': True})
+        requests.put(url=self.url, data=put_body, headers=put_headers)
 
 
 class Bridge(object):
@@ -65,6 +73,7 @@ class Bridge(object):
         # if authorized, the response is a dictionary of light data
         if isinstance(response_data, dict):
             self.authorized = True
+            self._find_lights()
             return
 
         # if unauthorized, then response is a list with an error dictionary inside
@@ -76,6 +85,19 @@ class Bridge(object):
             error_desc = unauthorized_error['description']
             message = "Received an unexpected error. TYPE: {0}. DESCRIPTION: {1}".format(error_type, error_desc)
             raise BridgeAPIResponseException(message)
+
+    def _find_lights(self):
+        
+        lights_url = "http://{0}/api/{1}/lights".format(self.ip_address, self.username)
+        lights_response = requests.get(lights_url)
+
+        if lights_response.status_code != 200:
+            message = "The bridge did not respond properly on route '{0}'".format(lights_url)
+            raise BridgeAPIResponseException(message)
+
+        response_data = lights_response.json()
+        for k in response_data.keys():
+            self.lights[k] = Light(self.ip_address, self.username, k)
 
     def authorize(self):
 
@@ -96,6 +118,7 @@ class Bridge(object):
             if not unauthorized_error:
                 self.authorized = True
                 self.press_link = False
+                self._find_lights()
                 return
 
             if unauthorized_error['type'] == 101:
