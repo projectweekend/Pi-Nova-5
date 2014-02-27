@@ -56,6 +56,8 @@ if __name__ == "__main__":
                     print("Green LED blink pattern: 01")
 
             # bridge is now authorized...
+            if hue_bridge.authorized:
+                print("Green LED blink pattern: 01")
             while hue_bridge.authorized:
                 # check for motion and log it
                 if sensors.detect_motion():
