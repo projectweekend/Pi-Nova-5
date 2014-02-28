@@ -17,7 +17,7 @@ class Stash(object):
     def _build_file_name(self, file_name):
         file_extension = stash_settings.STASH_FILE_EXTENSION
         file_path = stash_settings.STASH_STORAGE_PATH
-        self._file_name = "{0}/{1}.{2}".format(file_path, file_name, file_extension)
+        self._file_name =  "{0}/{1}.{2}".format(file_path, file_name, file_extension)
 
     def _load_data(self):
         if os.path.exists(self._file_name):
@@ -51,3 +51,6 @@ class Stash(object):
     def empty(self):
         self.data = []
         self._commit_data()
+
+    def close(self):
+        self._file.close()    
