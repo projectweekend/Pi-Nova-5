@@ -38,6 +38,10 @@ class Bridge(object):
         self.lights = {}
         self._check_authorization()
 
+    @staticmethod
+    def _parse_error(self, response_data):
+        return response_data[0].get('error', '')
+
     # Set the ip_address using HUE API web utility
     def _find_ip_address(self):
 
@@ -70,7 +74,7 @@ class Bridge(object):
             return
 
         # if unauthorized, then response is a list with an error dictionary inside
-        unauthorized_error = data[0].get('error', '')
+        unauthorized_error = self._parse_error(data)
         if unauthorized_error and unauthorized_error['type'] == 1:
             self.authorized = False
         else:
@@ -102,7 +106,7 @@ class Bridge(object):
                 raise BridgeAPIResponseException(message)
 
             data = r.json()
-            unauthorized_error = data[0].get('error', '')
+            unauthorized_error = self._parse_error(data)
 
             if not unauthorized_error:
                 self.authorized = True
