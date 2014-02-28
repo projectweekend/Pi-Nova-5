@@ -1,3 +1,4 @@
+import time
 import json
 import requests
 from hammock import Hammock
@@ -129,3 +130,4 @@ class Bridge(object):
 
             for k, light in self.lights.items():
                 light.on()
+                time.sleep(1)
