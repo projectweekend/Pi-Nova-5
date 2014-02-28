@@ -18,7 +18,7 @@ class Light(object):
         self.username = username
         self.api = api
 
-    def turn_on(self):
+    def on(self):
         self.api(self.username).lights(self.id).state.PUT(data=json.dumps({'on': True}))
 
 
@@ -122,3 +122,10 @@ class Bridge(object):
                 error_desc = unauthorized_error['description']
                 message = "Received an unexpected error. TYPE: {0}. DESCRIPTION: {1}".format(error_type, error_desc)
                 raise BridgeAPIResponseException(message)
+
+    def lights_on(self):
+        
+        if self.authorized:
+
+            for k, light in self.lights.items():
+                light.on()

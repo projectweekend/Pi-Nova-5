@@ -65,7 +65,7 @@ if __name__ == "__main__":
                     events.log_motion_event()
                     # if it's dark enough then turn lights on
                     if sensors.read_luminosity() < LUMINOSITY_THRESHOLD:
-                        # TODO: Make call to HUE API to turn on lights
-                        print("LIGHTS ON!")
+                        hue_bridge.lights_on()
+
                     # Pause before checking for motion again
                     time.sleep(DETECTION_TIMEOUT)
