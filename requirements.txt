@@ -1,4 +1,5 @@
 hammock==0.2.4
 ipython==1.2.0
+pyusb==1.0.0b2
 requests==2.2.1
 wsgiref==0.1.2
