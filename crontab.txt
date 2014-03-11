@@ -1,0 +1,1 @@
+*/10 * * * * /home/pi/cron_jobs/send_data.sh
