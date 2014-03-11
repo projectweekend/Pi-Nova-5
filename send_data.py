@@ -13,7 +13,7 @@ def process_motion_data():
 
 
 def worker():
-    process_motion_data
+    process_motion_data()
 
 
 if __name__ == "__main__":
