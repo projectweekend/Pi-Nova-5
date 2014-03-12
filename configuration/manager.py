@@ -3,10 +3,6 @@ from stash import Stash
 # TODO: make a messaging module that can be imported
 
 
-BASE_API_URL = 'http://holly.local/api/'
-STASH_FILE_NAME = 'nova5_config_options'
-
-
 class ConfigurationManager(object):
 
     config_data = {}
