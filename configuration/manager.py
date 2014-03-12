@@ -11,7 +11,6 @@ class ConfigurationManager(object):
 
     config_data = {}
 
-
     def __init__(self, api_url, system_name):
         self._api = Hammock(api_url)
         self._system_name = system_name
@@ -33,9 +32,13 @@ class ConfigurationManager(object):
             self._send_failure_message(message_body.format())
             return False
         self._load_config_data(response.json())
+        return True
 
-    def build(self):
-        pass
+    def rebuild(self):
+        if self.pull():
+            self.save()
+            return True
+        return False
 
     def _get_stash(self):
         stash_file_name = "{0}_configuration_data".format(self._system_name.lower())
