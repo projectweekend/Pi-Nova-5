@@ -33,7 +33,7 @@ class ConfigurationManager(object):
 
     def _pull(self):
         url_params = {'system_name': self._system_name}
-        response = self.api.GET(params=url_params)
+        response = self._api.GET(params=url_params)
         if response.status_code != 200:
             message_body = "Unable to pull new config data from {0}"
             self._send_failure_message(message_body.format())
