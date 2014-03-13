@@ -124,10 +124,17 @@ class Bridge(object):
                 message = "Received an unexpected error. TYPE: {0}. DESCRIPTION: {1}".format(error_type, error_desc)
                 raise BridgeAPIResponseException(message)
 
-    def lights_on(self):
+    def lights_on(self, light_keys=[]):
+
+        lights = self.lights.items()
         
         if self.authorized:
-
-            for k, light in self.lights.items():
-                light.on()
-                time.sleep(1)
+            if light_keys:
+                for k, light in lights:
+                    if k in light_keys:
+                        light.on()
+                        time.sleep(1)                        
+            else:
+                for k, light in lights:
+                    light.on()
+                    time.sleep(1)
