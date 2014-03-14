@@ -4,6 +4,7 @@ from configuration import ConfigurationManager
 
 API_URL = 'http://holly.local/api/system/configuration'
 SYSTEM_NAME = 'Nova5'
+LUMINOSITY_THRESHOLD_DEFAULT = 10
 
 
 def get_enabled_lights():
@@ -18,8 +19,7 @@ def get_luminosity_threshold():
     manager = ConfigurationManager(API_URL, SYSTEM_NAME)
     luminosity_threshold = manager.read('luminosity_threshold')
     if not luminosity_threshold:
-        # return a default
-        return 10 
+        return LUMINOSITY_THRESHOLD_DEFAULT
     return luminosity_threshold
 
 
