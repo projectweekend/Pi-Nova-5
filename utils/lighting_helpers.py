@@ -14,6 +14,15 @@ def get_enabled_lights():
     return list_of_lights
 
 
+def get_luminosity_threshold():
+    manager = ConfigurationManager(API_URL, SYSTEM_NAME)
+    luminosity_threshold = manager.read('luminosity_threshold')
+    if not luminosity_threshold:
+        # return a default
+        return 10 
+    return luminosity_threshold
+
+
 def is_auto_lighting_enabled():
     manager = ConfigurationManager(API_URL, SYSTEM_NAME)
     disabled_start = manager.read('disabled_time_start')
