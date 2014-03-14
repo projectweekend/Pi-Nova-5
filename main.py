@@ -8,7 +8,6 @@ from led import LED
 
 
 DETECTION_TIMEOUT = 150
-LUMINOSITY_THRESHOLD = 10
 MAX_AUTH_FAILURES = 5
 
 
@@ -58,7 +57,7 @@ if __name__ == "__main__":
                     print("MOTION DETECTED!")
                     events.log_motion_event()
                     # if it's dark enough then turn lights on
-                    if sensors.read_luminosity() < LUMINOSITY_THRESHOLD:
+                    if sensors.read_luminosity() < utils.get_luminosity_threshold():
                         if utils.is_auto_lighting_enabled():
                             enabled_lights = utils.get_enabled_lights()
                             hue_bridge.lights_on(enabled_lights)
