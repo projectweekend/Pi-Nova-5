@@ -25,7 +25,7 @@ class LightingConfig(object):
             return LUMINOSITY_THRESHOLD_DEFAULT
         return luminosity_threshold
 
-    def auto_lighting_enabled(self):
+    def auto_lighting_disabled(self):
         disabled_start = self.manager.read('disabled_time_start')
         disabled_end = self.manager.read('disabled_time_end')
 
