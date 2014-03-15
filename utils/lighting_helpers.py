@@ -7,38 +7,39 @@ SYSTEM_NAME = 'Nova5'
 LUMINOSITY_THRESHOLD_DEFAULT = 10
 
 
-def get_enabled_lights():
-    manager = ConfigurationManager(API_URL, SYSTEM_NAME)
-    list_of_lights = manager.read('lights_enabled')
-    if not list_of_lights:
-        return []
-    return list_of_lights
+class LightingConfig(object):
 
+    def __init__(self):
+        
+        self.manager = ConfigurationManager(API_URL, SYSTEM_NAME)
 
-def get_luminosity_threshold():
-    manager = ConfigurationManager(API_URL, SYSTEM_NAME)
-    luminosity_threshold = manager.read('luminosity_threshold')
-    if not luminosity_threshold:
-        return LUMINOSITY_THRESHOLD_DEFAULT
-    return luminosity_threshold
+    def enabled_lights(self):
+        list_of_lights = self.manager.read('lights_enabled')
+        if not list_of_lights:
+            return []
+        return list_of_lights
 
+    def luminosity_threshold(self):
+        luminosity_threshold = self.manager.read('luminosity_threshold')
+        if not luminosity_threshold:
+            return LUMINOSITY_THRESHOLD_DEFAULT
+        return luminosity_threshold
 
-def is_auto_lighting_enabled():
-    manager = ConfigurationManager(API_URL, SYSTEM_NAME)
-    disabled_start = manager.read('disabled_time_start')
-    disabled_end = manager.read('disabled_time_end')
+    def auto_lighting_enabled(self):
+        disabled_start = self.manager.read('disabled_time_start')
+        disabled_end = self.manager.read('disabled_time_end')
 
-    now = datetime.now()
+        now = datetime.now()
 
-    on_start_hour = now.hour == disabled_start['hour']
-    past_start_hour = now.hour > disabled_start['hour']
-    past_start_minute = now.minute >= disabled_start['minute']
+        on_start_hour = now.hour == disabled_start['hour']
+        past_start_hour = now.hour > disabled_start['hour']
+        past_start_minute = now.minute >= disabled_start['minute']
 
-    on_end_hour = now.hour == disabled_end['hour']
-    before_end_hour = now.hour < disabled_end['hour']
-    before_end_minute = now.hour <= disabled_end['minute']
+        on_end_hour = now.hour == disabled_end['hour']
+        before_end_hour = now.hour < disabled_end['hour']
+        before_end_minute = now.hour <= disabled_end['minute']
 
-    if past_start_hour or (on_start_hour and past_start_minute):
-        if before_end_hour or (on_end_hour and before_end_minute):
-            return True
-    return False
+        if past_start_hour or (on_start_hour and past_start_minute):
+            if before_end_hour or (on_end_hour and before_end_minute):
+                return True
+        return False
