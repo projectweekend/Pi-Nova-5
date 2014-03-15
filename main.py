@@ -14,6 +14,7 @@ MAX_AUTH_FAILURES = 5
 if __name__ == "__main__":
 
     led = LED()
+    luminosity_sensor = sensors.adafruit.TSL2561()
 
     # setup initial connection with HUE bridge
     try:
@@ -57,7 +58,7 @@ if __name__ == "__main__":
                     events.log_motion_event()
                     lighting_config = utils.LightingConfig()
                     # if it's dark enough then turn lights on
-                    current_luminosity = sensors.read_luminosity()
+                    current_luminosity = luminosity_sensor.read_lux(gain=1)
                     if current_luminosity < lighting_config.luminosity_threshold():
                         if not lighting_config.auto_lighting_disabled():
                             hue_bridge.lights_on(lighting_config.enabled_lights())
