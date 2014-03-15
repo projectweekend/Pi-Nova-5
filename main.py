@@ -4,6 +4,7 @@ import sensors
 import events
 import lighting
 import utils
+import adafruit
 from led import LED
 
 
@@ -14,7 +15,7 @@ MAX_AUTH_FAILURES = 5
 if __name__ == "__main__":
 
     led = LED()
-    luminosity_sensor = sensors.adafruit.TSL2561()
+    luminosity_sensor = adafruit.TSL2561()
 
     # setup initial connection with HUE bridge
     try:
