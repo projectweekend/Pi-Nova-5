@@ -26,6 +26,10 @@ class LightingConfig(object):
         return luminosity_threshold
 
     def auto_lighting_disabled(self):
+
+        if self.manager.read('manually_disabled'):
+            return True
+
         disabled_start = self.manager.read('disabled_time_start')
         disabled_end = self.manager.read('disabled_time_end')
 
