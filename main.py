@@ -59,12 +59,12 @@ if __name__ == "__main__":
     luminosity_sensor = adafruit.TSL2561()
 
     hue_bridge = connect_with_hue(led)
-    # in case the bridge cannot be found
+    # make sure bridge was found
     if not hue_bridge:
         # TODO send message to Holly
         return
     while hue_bridge.authorized:
-        # block execution until motion is detected
+        # this blocks execution until motion is detected
         gpio.wait_for_edge(PIR_PIN, gpio.RISING)
         # everything below is only executed when motion is detected
         events.log_motion_event()
