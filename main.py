@@ -62,10 +62,9 @@ if __name__ == "__main__":
         if sensors.detect_motion():
             events.log_motion_event()
             lighting_config = utils.LightingConfig()
-            # if it's dark enough then turn lights on
-            current_luminosity = luminosity_sensor.read_lux(gain=1)
-            if current_luminosity < lighting_config.luminosity_threshold():
-                if not lighting_config.auto_lighting_disabled():
+            if not lighting_config.auto_lighting_disabled():
+                current_luminosity = luminosity_sensor.read_lux(gain=1)
+                if current_luminosity < lighting_config.luminosity_threshold():
                     hue_bridge.lights_on(lighting_config.enabled_lights())
             # Pause before checking for motion again
             time.sleep(DETECTION_TIMEOUT)
