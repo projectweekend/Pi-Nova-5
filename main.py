@@ -1,15 +1,15 @@
 import time
+import RPi.GPIO as gpio
 
-import sensors
 import events
 import lighting
 import utils
 import adafruit
 from led import LED
 
-
 DETECTION_TIMEOUT = 150
 MAX_AUTH_FAILURES = 5
+PIR_PIN = 18
 
 
 def connect_with_hue(led):
@@ -52,6 +52,9 @@ def connect_with_hue(led):
 
 if __name__ == "__main__":
 
+    gpio.setmode(gpio.BCM)
+    gpio.setup(PIR_PIN, gpio.IN)
+
     led = LED()
     luminosity_sensor = adafruit.TSL2561()
 
@@ -61,13 +64,14 @@ if __name__ == "__main__":
         # TODO send message to Holly
         return
     while hue_bridge.authorized:
-        # check for motion and log it
-        if sensors.detect_motion():
-            events.log_motion_event()
-            lighting_config = utils.LightingConfig()
-            if not lighting_config.auto_lighting_disabled():
-                current_luminosity = luminosity_sensor.read_lux(gain=1)
-                if current_luminosity < lighting_config.luminosity_threshold():
-                    hue_bridge.lights_on(lighting_config.enabled_lights())
-            # Pause before checking for motion again
-            time.sleep(DETECTION_TIMEOUT)
+        # block execution until motion is detected
+        gpio.wait_for_edge(PIR_PIN, gpio.RISING)
+        # everything below is only executed when motion is detected
+        events.log_motion_event()
+        lighting_config = utils.LightingConfig()
+        if not lighting_config.auto_lighting_disabled():
+            current_luminosity = luminosity_sensor.read_lux(gain=1)
+            if current_luminosity < lighting_config.luminosity_threshold():
+                hue_bridge.lights_on(lighting_config.enabled_lights())
+        # Pause before checking for motion again
+        time.sleep(DETECTION_TIMEOUT)
