@@ -11,6 +11,9 @@ DETECTION_TIMEOUT = 180
 MAX_AUTH_FAILURES = 5
 PIR_PIN = 18
 
+gpio.setmode(gpio.BCM)
+gpio.setup(PIR_PIN, gpio.IN)
+
 
 def connect_with_hue(led):
     try:
@@ -52,24 +55,21 @@ def connect_with_hue(led):
 
 if __name__ == "__main__":
 
-    gpio.setmode(gpio.BCM)
-    gpio.setup(PIR_PIN, gpio.IN)
-
     led = LED()
     luminosity_sensor = adafruit.TSL2561()
-
     hue_bridge = connect_with_hue(led)
 
     while True:
         # this blocks execution until motion is detected
+        print("Waiting")
         gpio.wait_for_edge(PIR_PIN, gpio.RISING)
         # everything below is executed only when motion is detected
-        print("Motion Detected")
+        print("Motion!!!")
         events.log_motion_event()
         lighting_config = utils.LightingConfig()
         if hue_bridge and not lighting_config.auto_lighting_disabled():
             current_luminosity = luminosity_sensor.read_lux(gain=1)
-            print(current_luminosity)
+            print("Luminosity: {0}".format(current_luminosity))
             if current_luminosity < lighting_config.luminosity_threshold():
                 hue_bridge.lights_on(lighting_config.enabled_lights())
         elif not hue_bridge:
