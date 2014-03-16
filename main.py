@@ -38,7 +38,7 @@ def connect_with_hue(led):
             try:
                 hue_bridge.authorize()
             except lighting.BridgeAPIResponseException:
-                led.blink('red', 3)
+                led.blink('red', 2)
                 AUTH_FAILURES += 1
                 if AUTH_FAILURES >= MAX_AUTH_FAILURES:
                     led.blink('red', 10)
@@ -70,5 +70,7 @@ if __name__ == "__main__":
             current_luminosity = luminosity_sensor.read_lux(gain=1)
             if current_luminosity < lighting_config.luminosity_threshold():
                 hue_bridge.lights_on(lighting_config.enabled_lights())
+        elif not hue_bridge:
+            led.blink('red', 3)
         # Wait before returning to loop
         time.sleep(DETECTION_TIMEOUT)
