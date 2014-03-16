@@ -61,15 +61,12 @@ if __name__ == "__main__":
 
     while True:
         # this blocks execution until motion is detected
-        print("Waiting")
         gpio.wait_for_edge(PIR_PIN, gpio.RISING)
         # everything below is executed only when motion is detected
-        print("Motion!!!")
         events.log_motion_event()
         lighting_config = utils.LightingConfig()
         if hue_bridge and not lighting_config.auto_lighting_disabled():
             current_luminosity = luminosity_sensor.read_lux(gain=1)
-            print("Luminosity: {0}".format(current_luminosity))
             if current_luminosity < lighting_config.luminosity_threshold():
                 hue_bridge.lights_on(lighting_config.enabled_lights())
         elif not hue_bridge:
