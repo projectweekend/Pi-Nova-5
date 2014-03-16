@@ -20,12 +20,12 @@ def connect_with_hue(led):
             lighting.BridgeConfigurationException,
             lighting.BridgeAPIResponseException):
         led.on('red')
+        return None
     else:
         # bridge is authorized...
         if hue_bridge.authorized:
             led.blink('green', 3)
             return hue_bridge
-
         # bridge needs to authorize..
         AUTH_FAILURES = 0
         while not hue_bridge.authorized:
@@ -43,6 +43,7 @@ def connect_with_hue(led):
                 if AUTH_FAILURES >= MAX_AUTH_FAILURES:
                     led.blink('red', 10)
                     raise lighting.BridgeAuthAttemptsExceeded
+                # wait 5 seconds before reattempting after a failure
                 time.sleep(5)
             else:
                 led.blink('green', 3)
@@ -54,7 +55,7 @@ if __name__ == "__main__":
     led = LED()
     luminosity_sensor = adafruit.TSL2561()
 
-    hue_bridge = connect_with_hue()
+    hue_bridge = connect_with_hue(led)
 
     while hue_bridge.authorized:
         # check for motion and log it
