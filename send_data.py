@@ -1,3 +1,4 @@
+import time
 import holly
 from stash import Stash
 
@@ -13,7 +14,17 @@ def process_motion_data():
 
 
 def worker():
-    process_motion_data()
+
+    number_of_attempts = 0
+
+    while number_of_attempts <= 5:
+        try:
+            process_motion_data()
+        except:
+            number_of_attempts += 1
+            time.sleep(10)
+        else:
+            break
 
 
 if __name__ == "__main__":
