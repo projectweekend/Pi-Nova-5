@@ -62,8 +62,9 @@ if __name__ == "__main__":
     hue_bridge = connect_with_hue(led)
 
     while True:
-        # this blocks execution until motion is detected
+        # load config data incase something changed
         lighting_config = utils.LightingConfig()
+        # this blocks execution until motion is detected
         gpio.wait_for_edge(PIR_PIN, gpio.RISING)
         # everything below is executed only when motion is detected
         events.log_motion_event()
@@ -73,5 +74,5 @@ if __name__ == "__main__":
                 hue_bridge.lights_on(lighting_config.enabled_lights())
         elif not hue_bridge:
             led.blink('red', 3)
-        # Wait before returning to loop
+        # Wait before restarting loop
         time.sleep(DETECTION_TIMEOUT)
