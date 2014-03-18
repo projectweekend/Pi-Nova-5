@@ -65,7 +65,6 @@ if __name__ == "__main__":
         
         # load config data before waiting for motion event
         lighting_config = utils.LightingConfig()
-        lighting_system_disabled = lighting_config.auto_lighting_disabled()
         lights_included_for_use = lighting_config.enabled_lights()
         luminosity_threshold = lighting_config.luminosity_threshold()
 
@@ -74,7 +73,7 @@ if __name__ == "__main__":
 
         # everything below is executed only when motion is detected
         events.log_motion_event()
-        if not lighting_system_disabled:
+        if not lighting_config.auto_lighting_disabled():
             if hue_bridge:
                 current_luminosity = luminosity_sensor.read_lux(gain=1)
                 if current_luminosity < luminosity_threshold:
