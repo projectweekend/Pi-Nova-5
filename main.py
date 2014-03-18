@@ -62,17 +62,24 @@ if __name__ == "__main__":
     hue_bridge = connect_with_hue(led)
 
     while True:
-        # load config data incase something changed
+        
+        # load config data in case something changed
         lighting_config = utils.LightingConfig()
+        lighting_system_disabled = lighting_config.auto_lighting_disabled()
+        lights_included_for_use = lighting_config.enabled_lights()
+        luminosity_threshold = lighting_config.luminosity_threshold()
+
         # this blocks execution until motion is detected
         gpio.wait_for_edge(PIR_PIN, gpio.RISING)
+
         # everything below is executed only when motion is detected
         events.log_motion_event()
-        if hue_bridge and not lighting_config.auto_lighting_disabled():
-            current_luminosity = luminosity_sensor.read_lux(gain=1)
-            if current_luminosity < lighting_config.luminosity_threshold():
-                hue_bridge.lights_on(lighting_config.enabled_lights())
-        elif not hue_bridge:
-            led.blink('red', 3)
+        if not lighting_system_disabled:
+            if hue_bridge:
+                current_luminosity = luminosity_sensor.read_lux(gain=1)
+                if current_luminosity < luminosity_threshold:
+                    hue_bridge.lights_on(lights_included_for_use)
+            else:
+                led.blink('red', 3)
         # Wait before restarting loop
         time.sleep(DETECTION_TIMEOUT)
