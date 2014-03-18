@@ -63,7 +63,7 @@ if __name__ == "__main__":
 
     while True:
         
-        # load config data in case something changed
+        # load config data before waiting for motion event
         lighting_config = utils.LightingConfig()
         lighting_system_disabled = lighting_config.auto_lighting_disabled()
         lights_included_for_use = lighting_config.enabled_lights()
