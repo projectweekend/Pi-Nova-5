@@ -1,5 +1,6 @@
 import time
 
+import holly
 from configuration import ConfigurationManager
 
 
@@ -24,5 +25,4 @@ if __name__ == "__main__":
             refresh_complete = True
 
     if refresh_complete == False:
-        # TODO log failure with a message to Holly
-        pass
+        holly.send_status_message('Nova5', "Worker failed: 'refresh_config'.")
