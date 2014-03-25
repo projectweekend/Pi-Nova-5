@@ -86,7 +86,9 @@ class LightingConfig(object):
         before_end_hour = now.hour < disabled_end['hour']
         before_end_minute = now.hour <= disabled_end['minute']
 
-        if past_start_hour or (on_start_hour and past_start_minute):
-            if before_end_hour or (on_end_hour and before_end_minute):
+        has_started = past_start_hour or (on_start_hour and past_start_minute)
+        has_not_ended = before_end_hour or (on_end_hour and before_end_minute)
+
+        if has_started or has_not_ended:
                 return True
         return False
