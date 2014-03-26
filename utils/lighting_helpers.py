@@ -78,6 +78,7 @@ class LightingConfig(object):
 
         now = datetime.now()
 
+        # TODO: this is still broken...fix it
         on_start_hour = now.hour == disabled_start['hour']
         past_start_hour = now.hour > disabled_start['hour']
         past_start_minute = now.minute >= disabled_start['minute']
