@@ -11,6 +11,18 @@ LUMINOSITY_THRESHOLD_DEFAULT = 10
 MAX_AUTH_FAILURES = 5
 
 
+def make_disabled_hours_list(start_hour, end_hour):
+    output = []
+    # disabled time span wraps midnight hour
+    if start_hour > end_hour:
+        output.extend(range(start_hour, 24))
+        output.extend(range(0, end_hour))
+    else:
+        output.extend(range(start_hour, end_hour + 1))
+    output.sort()
+    return output
+
+
 def connect_with_hue(led):
     try:
         hue_bridge = lighting.Bridge()
@@ -73,8 +85,9 @@ class LightingConfig(object):
         if self._manager.read('manually_disabled'):
             return True
 
-        disabled_hours_list = self._manager.read('diasbled_hours')
-
+        start = self._manager.read('disabled_time_start')
+        end = self._manager.read('disabled_time_end')
+        disabled_hours_list = make_disabled_hours_list(start['hour'], end['hour'])
         now = datetime.now()
 
         if now.hour in disabled_hours_list:
