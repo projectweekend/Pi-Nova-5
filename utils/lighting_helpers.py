@@ -73,23 +73,11 @@ class LightingConfig(object):
         if self._manager.read('manually_disabled'):
             return True
 
-        disabled_start = self._manager.read('disabled_time_start')
-        disabled_end = self._manager.read('disabled_time_end')
+        disabled_hours_list = self._manager.read('diasbled_hours')
 
         now = datetime.now()
 
-        # TODO: this is still broken...fix it
-        on_start_hour = now.hour == disabled_start['hour']
-        past_start_hour = now.hour > disabled_start['hour']
-        past_start_minute = now.minute >= disabled_start['minute']
+        if now.hour in disabled_hours_list:
+            return True
 
-        on_end_hour = now.hour == disabled_end['hour']
-        before_end_hour = now.hour < disabled_end['hour']
-        before_end_minute = now.hour <= disabled_end['minute']
-
-        has_started = past_start_hour or (on_start_hour and past_start_minute)
-        has_not_ended = before_end_hour or (on_end_hour and before_end_minute)
-
-        if has_started or has_not_ended:
-                return True
         return False
