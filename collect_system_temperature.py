@@ -15,7 +15,7 @@ def get_system_temp():
     current_date = datetime.datetime.utcnow().isoformat()
     return {
         'date': current_date,
-        'from': 'Starbug',
+        'from': 'Nova5',
         'celsius':celsius_temp, 
         'fahrenheit': fahrenheit_temp
     }

@@ -13,6 +13,16 @@ def process_motion_data():
     motion_stash.close()
 
 
+def process_system_temperature_data():
+    system_temperature_stash = Stash("system_temperature")
+    if system_temperature_stash.data:
+        data_created = holly.send_bulk_system_temperature_data(system_temperature_stash.data)
+        if data_created:
+            system_temperature_stash.empty()
+            return
+    system_temperature_stash.close()
+
+
 def worker():
 
     number_of_attempts = 0
@@ -20,6 +30,16 @@ def worker():
     while number_of_attempts <= 5:
         try:
             process_motion_data()
+        except:
+            number_of_attempts += 1
+            time.sleep(10)
+        else:
+            break
+
+    number_of_attempts = 0
+    while number_of_attempts <= 5:
+        try:
+            process_system_temperature_data()
         except:
             number_of_attempts += 1
             time.sleep(10)

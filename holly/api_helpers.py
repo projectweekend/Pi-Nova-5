@@ -25,4 +25,13 @@ def send_bulk_movement_log_data(motion_data_list):
     if response.status_code != 201:
         send_status_message('Nova5', 'Sending of bulk indoor movement data failed.')
         return False
-    return True      
+    return True
+
+
+def send_bulk_system_temperature_data(temperature_data_list):
+    post_data = json.dumps({'temperature_data': temperature_data_list})
+    response = API.system.temperature.bulk.POST(data=post_data, headers=API_HEADERS)
+    if response.status_code != 201:
+        send_status_message('Nova5', 'Sending of bulk system temperature data failed.')
+        return False
+    return True
