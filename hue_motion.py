@@ -7,7 +7,7 @@ DETECTION_TIMEOUT = 60
 MOTION_PIN = 18
 
 gpio.setmode(gpio.BCM)
-gpio.setup(MOTION_PIN, gpio.IN, pull_up_down=gpio.PUD_DOWN)
+gpio.setup(MOTION_PIN, gpio.IN, initial=gpio.LOW, pull_up_down=gpio.PUD_DOWN)
 
 
 if __name__ == "__main__":
