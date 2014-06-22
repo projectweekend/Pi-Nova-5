@@ -1,3 +1,6 @@
+## Moving along...
+The Raspberry Pi functionality of this project was in the process of being rewritten when I decided to move it into another project [Ar-Dock](https://github.com/projectweekend/Ar-Dock). The v1 release tag of this project encapsulates the original working project prior to the rewrite. Going forward, this repository will not be maintained.
+
 This is the Raspberry Pi component of a system that interfaces with the [Philips HUE Wireless Lighting](http://www.meethue.com) system to automatically turn on lights when motion is detected and luminosity is below a user defined threshold. The actual motion and luminosity sensor component can be found here: [Ar-Nova-5](https://github.com/projectweekend/Ar-Nova-5).
 
 ------------------------------------------------------------------------------
